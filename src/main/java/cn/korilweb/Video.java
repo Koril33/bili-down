@@ -85,7 +85,11 @@ public class Video {
 
                 Document document = Jsoup.parse(bodyContent);
 
-                this.name = document.title().replace("_哔哩哔哩_bilibili", "");
+                // 处理视频标题，去掉特殊的符号
+                this.name = document.title()
+                        .replace("_哔哩哔哩_bilibili", "")
+                        .replace("/", "-")
+                        .replace("\\\\", "-");
 
                 // 是否是多集视频
                 if (bodyContent.contains(MULTI_VIDEO_ID)) {
