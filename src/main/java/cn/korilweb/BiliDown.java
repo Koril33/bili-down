@@ -49,6 +49,17 @@ public class BiliDown implements Runnable {
 
 
     /**
+     * 多集视频，选定的集数
+     */
+    @CommandLine.Option(
+            names = { "-n", "--num" },
+            paramLabel = "EPISODE_NUM",
+            description = "download episode num, split char is '-'"
+    )
+    String num = null;
+
+
+    /**
      * B站视频的 URL
      */
     @CommandLine.Parameters(
@@ -63,7 +74,7 @@ public class BiliDown implements Runnable {
     @Override
     public void run() {
 
-        Video video = new Video(ffmpegPath, originUrl);
+        Video video = new Video(ffmpegPath, originUrl, num);
         video.init();
         video.parse();
 

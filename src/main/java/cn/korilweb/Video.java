@@ -57,12 +57,14 @@ public class Video {
 
     private Path ffmpegPath;
 
-    public Video(String originUrl) {
-        this("ffmpeg.exe", originUrl);
-    }
+
+    /**
+     * 下载集数区间，如：3-12，表示从第 3 集下载到第 12 集，包括 3 和 12
+     */
+    private String episodeNumStr;
 
 
-    public Video(String ffmpegPathStr, String originUrl) {
+    public Video(String ffmpegPathStr, String originUrl, String numStr) {
         this.ffmpegPath = Paths.get(ffmpegPathStr);
 
         if (Files.notExists(this.ffmpegPath)) {
@@ -70,6 +72,7 @@ public class Video {
         }
 
         this.originUrl = originUrl;
+        this.episodeNumStr = numStr;
     }
 
 
@@ -103,13 +106,24 @@ public class Video {
                     // 获取总集数信息
                     String pageNum = elementsByClass.get(0).text().split("/")[1].replace(")", "");
 
-                    for (int i = 0; i < Integer.parseInt(pageNum); i++) {
+                    int totalNum = Integer.parseInt(pageNum);
+
+                    int startNum = Objects.isNull(episodeNumStr) ?
+                            1 : Integer.parseInt(episodeNumStr.split("-")[0]);
+
+                    int endNum = Objects.isNull(episodeNumStr) ?
+                            totalNum : Integer.parseInt(episodeNumStr.split("-")[1]);
+
+                    for (int i = startNum; i <= endNum; i++) {
                         // 集数拼接到原始 URL 后面，构成每一集的 URL
-                        this.parsedUrls.add(originUrl + "?p=" + (i + 1));
+                        this.parsedUrls.add(originUrl + "?p=" + i);
                     }
 
                 }
                 else {
+                    if (Objects.nonNull(episodeNumStr)) {
+                        throw new IllegalArgumentException("解析结果为单个视频，不允许指定下载集数区间");
+                    }
                     this.parsedUrls.add(originUrl);
                 }
             }
@@ -122,12 +136,17 @@ public class Video {
     }
 
 
-
+    /**
+     * 通过原始视频获取真实的下载路径
+     */
     public void parse() {
 
         if (parsedUrls.size() == 0) {
             throw new RuntimeException("未包含待处理的 URL");
         }
+
+        int startNum = Objects.isNull(episodeNumStr) ?
+                1 : Integer.parseInt(episodeNumStr.split("-")[0]);
 
         for (int i = 0; i < parsedUrls.size(); i++) {
             String url = parsedUrls.get(i);
@@ -158,7 +177,7 @@ public class Video {
                         episode.setQuality(0);
 
                         if (this.isMulti) {
-                            episode.setName(this.name + "-" + (i + 1));
+                            episode.setName(this.name + "-" + (startNum + i));
                         }
                         else {
                             episode.setName(this.name);
