@@ -35,5 +35,14 @@ public class Episode {
     private Integer quality;
 
 
+    /**
+     * 视频文件是否下载成功
+     */
+    private boolean videoSuccess = false;
 
+
+    /**
+     * 音频文件是否下载成功
+     */
+    private boolean audioSuccess = false;
 }

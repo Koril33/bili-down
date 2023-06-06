@@ -275,10 +275,19 @@ public class Video {
                             videoLength,
                             (end -start)
                     );
-                    System.out.println(ConsoleColors.RESET);
+
+                    episode.setVideoSuccess(true);
                 }
             } catch (IOException e) {
-                throw new RuntimeException(e);
+                // throw new RuntimeException(e);
+                System.out.printf(
+                        ConsoleColors.RED +
+                                "\n%s 的[视频文件]下载失败: %s\n",
+                        episode.getName(),
+                        e
+                );
+            } finally {
+                System.out.println(ConsoleColors.RESET);
             }
 
             // 下载音频文件
@@ -324,12 +333,24 @@ public class Video {
                             (end -start)
                     );
 
-                    System.out.println(ConsoleColors.RESET);
+                    episode.setAudioSuccess(true);
                 }
             } catch (IOException e) {
-                throw new RuntimeException(e);
+                // throw new RuntimeException(e);
+                System.out.printf(
+                        ConsoleColors.RED +
+                                "\n%s 的[音频文件]下载失败: %s\n",
+                        episode.getName(),
+                        e
+                );
+            } finally {
+                System.out.println(ConsoleColors.RESET);
             }
 
+            if (!episode.isVideoSuccess() || !episode.isAudioSuccess()) {
+                System.out.println(episode.getName() + " 部分文件下载失败，跳过...");
+                continue;
+            }
 
             String prefix = episode.getName();
             Process process = merge(
