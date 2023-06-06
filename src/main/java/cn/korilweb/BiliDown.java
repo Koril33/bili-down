@@ -59,6 +59,14 @@ public class BiliDown implements Runnable {
     String num = null;
 
 
+    @CommandLine.Option(
+            names = { "-c", "--cookie" },
+            paramLabel = "COOKIE_VALUE",
+            description = "download cookie header"
+    )
+    String cookie = "";
+
+
     /**
      * B站视频的 URL
      */
@@ -76,7 +84,7 @@ public class BiliDown implements Runnable {
 
         Video video = new Video(ffmpegPath, originUrl, num);
         video.init();
-        video.parse();
+        video.parse(cookie);
 
         long start = System.currentTimeMillis();
         video.download(Paths.get(savePath), removeFlag);

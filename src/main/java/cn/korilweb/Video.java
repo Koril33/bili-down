@@ -139,7 +139,7 @@ public class Video {
     /**
      * 通过原始视频获取真实的下载路径
      */
-    public void parse() {
+    public void parse(String cookie) {
 
         if (parsedUrls.size() == 0) {
             throw new RuntimeException("未包含待处理的 URL");
@@ -150,7 +150,10 @@ public class Video {
 
         for (int i = 0; i < parsedUrls.size(); i++) {
             String url = parsedUrls.get(i);
-            Request request = new Request.Builder().url(url).build();
+            Request request = new Request.Builder()
+                    .url(url)
+                    .addHeader("Cookie", cookie)
+                    .build();
 
             try (Response response = client.newCall(request).execute()) {
                 // 找到指定的 json 字符串
