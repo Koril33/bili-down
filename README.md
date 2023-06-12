@@ -34,3 +34,23 @@ bili-download.exe -n "3-5" "https://www.bilibili.com/video/BV1UQ4y1B7d7"
 ```shell
 bili-download.exe -s ".\中国通史" "https://www.bilibili.com/video/BV1UQ4y1B7d7"
 ```
+
+### 指定需要下载的所有 URL 所存放的文件
+如果需要指定多个视频 URL，有两种方式： 
+
+1. 指定多个参数，比如下面的指令将下载 2 个视频文件
+```shell
+bili-download.exe "https://www.bilibili.com/video/BV1DN411r7Cj/" "https://www.bilibili.com/video/BV1fV4y1R7Kg/"
+```
+
+2. 将所有的 URL 放在一个文本中，然后通过 -o 或者 --origin 指定其路径
+```shell
+bili-download.exe -o "C:\users\dingj\Desktop\videos.txt"
+```
+
+`C:\users\dingj\Desktop\videos.txt` 的内容如下：
+```text
+https://www.bilibili.com/video/BV1DN411r7Cj/
+https://www.bilibili.com/video/BV1fV4y1R7Kg/
+```
+
