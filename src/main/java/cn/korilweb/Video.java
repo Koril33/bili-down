@@ -92,7 +92,8 @@ public class Video {
                 this.name = document.title()
                         .replace("_哔哩哔哩_bilibili", "")
                         .replace("/", "-")
-                        .replace("\\\\", "-");
+                        .replace("\\\\", "-")
+                        .replace("\"", "");
 
                 // 是否是多集视频
                 if (bodyContent.contains(MULTI_VIDEO_ID)) {
